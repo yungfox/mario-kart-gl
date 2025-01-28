@@ -3,11 +3,20 @@
 #include <errno.h>
 #include <string.h>
 
-#include <SDL2/SDL.h>
-#define GLEW_STATIC
-#include <GL/glew.h>
-#define GL_GLEXT_PROTOTYPES
-#include <SDL2/SDL_opengl.h>
+#ifdef __APPLE__
+#define GL_SILENCE_DEPRECATION
+#endif
+
+#ifdef _WIN32
+#define WIN32_LEAN_AND_MEAN
+#define OEMRESOURCE
+#include <windows.h>
+#endif
+
+#include "include/glad/glad.h"
+
+#define RGFW_IMPLEMENTATION
+#include "include/RGFW.h"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "include/stb_image.h"
@@ -70,30 +79,17 @@ int main(void) {
     char* itembox_frag_src = read_file_as_string(itembox_frag_file_path);
     char* itembox_vert_src = read_file_as_string(itembox_vert_file_path);
 
-    SDL_Window* window = SDL_CreateWindow("mario kart GL", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 600, 600, SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL);
+	RGFW_setGLVersion(RGFW_glCore, 3, 3);
+
+	RGFW_window* window = RGFW_createWindow("mario kart GL", RGFW_RECT(600, 600, 600, 600), RGFW_windowAllowDND | RGFW_windowCenter/*  | RGFW_windowScaleToMonitor */);
     if (window == NULL) {
-        fprintf(stderr, "could not create window: %s\n", SDL_GetError());
-        return 1;
+        printf("Failed to create RGFW window\n");
+        return -1;
     }
+    RGFW_window_makeCurrent(window);
 
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-    
-    int major;
-    int minor;
-    SDL_GL_GetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, &major);
-    SDL_GL_GetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, &minor);
-    printf("GL version %d.%d\n", major, minor);
-
-    if (SDL_GL_CreateContext(window) == NULL) {
-        fprintf(stderr, "could not create context for window: %s\n", SDL_GetError());
-        return 1;
-    }
-
-    GLenum glew_err = glewInit();
-    if (glew_err != GLEW_OK) {
-        fprintf(stderr, "could not initialize glew: %s\n", glewGetErrorString(glew_err));
+    if (gladLoadGL() == 0) {
+        fprintf(stderr, "failed to initialize GLAD\n");
         return 1;
     }
 
@@ -213,34 +209,24 @@ int main(void) {
     glUniform1i(image_uniform_location, 0);
 
     bool quit = false;
-    while (!quit) {
-        const Uint32 start = SDL_GetTicks();
-        SDL_Event event = {0};
-        while (SDL_PollEvent(&event)) {
-            switch (event.type) {
-                case SDL_QUIT:
-                    quit = true;
-                    break;
+    while (!quit)
+    {
+        while (RGFW_window_checkEvent(window)) {
+            if (window->event.type == RGFW_quit) {
+                quit = true;
+                break;
             }
         }
-
-        int width, height;
-        SDL_GetWindowSize(window, &width, &height);
-        glViewport(0, 0, width, height);
 
         glClearColor(0, 0, 0, 0);
         glClear(GL_COLOR_BUFFER_BIT);
 
         glDrawArrays(GL_TRIANGLE_STRIP, 0, VERTICES_COUNT);
-
-        SDL_GL_SwapWindow(window);
-
-        const Uint32 duration = SDL_GetTicks() - start;
-        const Uint32 delta_time_ms = 1000 / 60;
-        if (duration < delta_time_ms) {
-            SDL_Delay(delta_time_ms - duration);
-        }
+                        
+        RGFW_window_swapBuffers(window);
+        RGFW_window_checkFPS(window, 60);
     }
 
+    RGFW_window_close(window);
     return 0;
 }

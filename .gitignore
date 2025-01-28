@@ -1,3 +1,5 @@
+.vs
 .vscode
 *.dSYM
 mario-kart-gl
+*.exe

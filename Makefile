@@ -1,13 +1,17 @@
-PKGS = sdl2 glew
-CFLAGS = -Wall -Wextra -pedantic -ggdb
+CFLAGS = -Wall -Wextra -ggdb
+LIBS = -lX11 -lGL -lXrandr
 
-UNAME := $(shell uname)
-ifeq ($(UNAME), Darwin)
-	CFLAGS += -framework OpenGL
+ifeq ($(OS), Windows_NT)
+	LIBS = -lopengl32 -lgdi32
+else
+	UNAME := $(shell uname)
+	ifeq ($(UNAME), Darwin)
+		LIBS = -framework OpenGL -framework Cocoa -framework IOKit
+	endif
 endif
 
 all:
-	gcc $(CFLAGS) $(shell pkg-config --cflags $(PKGS)) $(shell pkg-config --libs $(PKGS)) -o mario-kart-gl main.c
+	gcc -o mario-kart-gl main.c include/glad/glad.c $(CFLAGS) $(LIBS)
 
 clean:
-	rm -rf mario-kart-gl *.dSYM
+	rm -rf mario-kart-gl *.dSYM *.exe
