@@ -16,6 +16,7 @@
 #include "include/glad/glad.h"
 
 #define RGFW_IMPLEMENTATION
+#define RGFW_NO_IOKIT
 #include "include/RGFW.h"
 
 #define STB_IMAGE_IMPLEMENTATION
@@ -38,6 +39,7 @@ typedef struct {
 #define VERTICES_COUNT 4
 
 char* read_file_as_string(const char* file_path) {
+    int error = 0;
     FILE* f = fopen(file_path, "r");
     if (f == NULL)
         goto error;
@@ -57,6 +59,11 @@ char* read_file_as_string(const char* file_path) {
         goto error;
 
     char* buffer = (char*)malloc(file_size + 1);
+    if (buffer == NULL) {
+        fprintf(stderr, "malloc failed! go buy more RAM fool LOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOL\n");
+        exit(1);
+    }
+    memset((void*)buffer, 0, sizeof(buffer[0]) * file_size + 1);
 
     fread(buffer, file_size, 1, f);
     if (ferror(f))
@@ -68,23 +75,31 @@ char* read_file_as_string(const char* file_path) {
     return buffer;
 
 error:
+    error = errno;
     if (f)
         fclose(f);
+    fprintf(stderr, "error reading file %s: %s\n", file_path, strerror(error));
     return NULL;
 }
 
 int main(void) {
-    const char* itembox_frag_file_path = "./shaders/itembox.frag";
-    const char* itembox_vert_file_path = "./shaders/itembox.vert";
+    const char* itembox_frag_file_path = "../shaders/itembox.frag";
+    const char* itembox_vert_file_path = "../shaders/itembox.vert";
+
     char* itembox_frag_src = read_file_as_string(itembox_frag_file_path);
+    if (itembox_frag_src == NULL)
+        return 1;
+
     char* itembox_vert_src = read_file_as_string(itembox_vert_file_path);
+    if (itembox_vert_src == NULL)
+        return 1;
 
 	RGFW_setGLVersion(RGFW_glCore, 3, 3);
 
 	RGFW_window* window = RGFW_createWindow("mario kart GL", RGFW_RECT(600, 600, 600, 600), RGFW_windowAllowDND | RGFW_windowCenter/*  | RGFW_windowScaleToMonitor */);
     if (window == NULL) {
-        printf("Failed to create RGFW window\n");
-        return -1;
+        fprintf(stderr, "failed to create RGFW window\n");
+        return 1;
     }
     RGFW_window_makeCurrent(window);
 
@@ -146,7 +161,7 @@ int main(void) {
         GLchar message[1024];
         GLsizei message_size = 0;
         glGetShaderInfoLog(frag_shader, sizeof(message), &message_size, message);
-        fprintf(stderr, "could not compile shader: %.*s\n", message_size, message);
+        fprintf(stderr, "could not compile fragment shader: %.*s\n", message_size, message);
         return 1;
     }
     
@@ -161,7 +176,7 @@ int main(void) {
         GLchar message[1024];
         GLsizei message_size = 0;
         glGetShaderInfoLog(vert_shader, sizeof(message), &message_size, message);
-        fprintf(stderr, "could not compile shader: %.*s\n", message_size, message);
+        fprintf(stderr, "could not compile vertex shader: %.*s\n", message_size, message);
         return 1;
     }
 
@@ -177,7 +192,7 @@ int main(void) {
         GLchar message[1024];
         GLsizei message_size = 0;
         glGetProgramInfoLog(program, sizeof(message), &message_size, message);
-        fprintf(stderr, "could not link shader: %.*s\n", message_size, message);
+        fprintf(stderr, "could not link program: %.*s\n", message_size, message);
         return 1;
     }
 
@@ -188,7 +203,7 @@ int main(void) {
 
     glUseProgram(program);
 
-    const char* texture_file_name = "images/questionmark.png";
+    const char* texture_file_name = "../images/questionmark.png";
     int texture_width, texture_height, n;
     unsigned char* texture_data = stbi_load(texture_file_name, &texture_width, &texture_height, &n, 0);
 
