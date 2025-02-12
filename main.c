@@ -2,9 +2,15 @@
 #include <stdbool.h>
 #include <errno.h>
 #include <string.h>
+#ifndef _WIN32
+#include <time.h>
+#include <sys/time.h>
+#endif
 
 #ifdef __APPLE__
 #define GL_SILENCE_DEPRECATION
+#include <mach/clock.h>
+#include <mach/mach.h>
 #endif
 
 #ifdef _WIN32
@@ -37,6 +43,8 @@ typedef struct {
 } Vertex;
 
 #define VERTICES_COUNT 4
+#define WIDTH 600
+#define HEIGHT 600
 
 char* read_file_as_string(const char* file_path) {
     int error = 0;
@@ -82,6 +90,36 @@ error:
     return NULL;
 }
 
+uint64_t get_time() {
+    struct timespec tp;
+
+#ifdef _WIN32
+    LARGE_INTEGER count;
+
+    if(!QueryPerformanceCounter(&count))
+    return -1;
+
+    LARGE_INTEGER freq;
+    if(!QueryPerformanceFrequency(&freq))
+    return -1;
+
+    tp.tv_sec = count.QuadPart / freq.QuadPart;
+    tp.tv_nsec = ((count.QuadPart % freq.QuadPart) * G) / freq.QuadPart;
+#elif __APPLE__
+    clock_serv_t cclock;
+    mach_timespec_t mts;
+    host_get_clock_service(mach_host_self(), REALTIME_CLOCK, &cclock);
+    clock_get_time(cclock, &mts);
+    mach_port_deallocate(mach_task_self(), cclock);
+    tp.tv_sec = mts.tv_sec;
+    tp.tv_nsec = mts.tv_nsec;
+#else
+    clock_gettime(CLOCK_MONOTONIC, &tp);
+#endif
+
+    return (tp.tv_sec * 1e9 + tp.tv_nsec) / 1e6;
+}
+
 int main(void) {
     const char* itembox_frag_file_path = "../shaders/itembox.frag";
     const char* itembox_vert_file_path = "../shaders/itembox.vert";
@@ -96,7 +134,7 @@ int main(void) {
 
 	RGFW_setGLVersion(RGFW_glCore, 3, 3);
 
-	RGFW_window* window = RGFW_createWindow("mario kart GL", RGFW_RECT(600, 600, 600, 600), RGFW_windowAllowDND | RGFW_windowCenter/*  | RGFW_windowScaleToMonitor */);
+	RGFW_window* window = RGFW_createWindow("mario kart GL", RGFW_RECT(WIDTH, HEIGHT, WIDTH, HEIGHT), RGFW_windowAllowDND | RGFW_windowCenter);
     if (window == NULL) {
         fprintf(stderr, "failed to create RGFW window\n");
         return 1;
@@ -221,18 +259,29 @@ int main(void) {
     stbi_image_free(texture_data);
 
     GLint image_uniform_location = glGetUniformLocation(program, "image");
+    GLint time_uniform_location = glGetUniformLocation(program, "time");
+    GLint resolution_uniform_location = glGetUniformLocation(program, "resolution");
     glUniform1i(image_uniform_location, 0);
+    glUniform2f(resolution_uniform_location, WIDTH, HEIGHT);
+    glViewport(0, 0, WIDTH, HEIGHT);
 
-    bool quit = false;
-    while (!quit)
-    {
+    while (RGFW_window_shouldClose(window) == 0) {
         while (RGFW_window_checkEvent(window)) {
-            if (window->event.type == RGFW_quit) {
-                quit = true;
+            switch (window->event.type) {
+                case RGFW_windowResized: {
+                    int width = window->r.w;
+                    int height = window->r.h;
+                    glUniform2f(resolution_uniform_location, width, height);
+                    glViewport(0, 0, width, height);
+                } break;
+                default:
                 break;
             }
         }
 
+        uint64_t time = get_time();
+        glUniform1f(time_uniform_location, time);
+        
         glClearColor(0, 0, 0, 0);
         glClear(GL_COLOR_BUFFER_BIT);
 
