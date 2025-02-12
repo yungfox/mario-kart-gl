@@ -2,15 +2,9 @@
 #include <stdbool.h>
 #include <errno.h>
 #include <string.h>
-#ifndef _WIN32
-#include <time.h>
-#include <sys/time.h>
-#endif
 
 #ifdef __APPLE__
 #define GL_SILENCE_DEPRECATION
-#include <mach/clock.h>
-#include <mach/mach.h>
 #endif
 
 #ifdef _WIN32
@@ -88,36 +82,6 @@ error:
         fclose(f);
     fprintf(stderr, "error reading file %s: %s\n", file_path, strerror(error));
     return NULL;
-}
-
-uint64_t get_time() {
-    struct timespec tp;
-
-#ifdef _WIN32
-    LARGE_INTEGER count;
-
-    if(!QueryPerformanceCounter(&count))
-    return -1;
-
-    LARGE_INTEGER freq;
-    if(!QueryPerformanceFrequency(&freq))
-    return -1;
-
-    tp.tv_sec = count.QuadPart / freq.QuadPart;
-    tp.tv_nsec = ((count.QuadPart % freq.QuadPart) * G) / freq.QuadPart;
-#elif __APPLE__
-    clock_serv_t cclock;
-    mach_timespec_t mts;
-    host_get_clock_service(mach_host_self(), REALTIME_CLOCK, &cclock);
-    clock_get_time(cclock, &mts);
-    mach_port_deallocate(mach_task_self(), cclock);
-    tp.tv_sec = mts.tv_sec;
-    tp.tv_nsec = mts.tv_nsec;
-#else
-    clock_gettime(CLOCK_MONOTONIC, &tp);
-#endif
-
-    return (tp.tv_sec * 1e9 + tp.tv_nsec) / 1e6;
 }
 
 int main(void) {
@@ -275,11 +239,11 @@ int main(void) {
                     glViewport(0, 0, width, height);
                 } break;
                 default:
-                break;
+                    break;
             }
         }
 
-        uint64_t time = get_time();
+        u64 time = RGFW_getTimeNS() / 1e6;
         glUniform1f(time_uniform_location, time);
         
         glClearColor(0, 0, 0, 0);
