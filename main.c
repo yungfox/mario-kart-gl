@@ -125,7 +125,7 @@ int main(void) {
     glBindBuffer(GL_ARRAY_BUFFER, vertex_vbo);
 
     const float size = 0.7;
-    float alpha = 0.5;
+    float alpha = 0.6666;
 
     Vertex vertex_buffer[] = {
         /* top back face */
@@ -248,7 +248,7 @@ int main(void) {
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, color));
 
-    alpha = 0.1;
+    alpha = 0.0;
     const float uv_size = 1;
 
     Vertex uv_buffer[] = {
