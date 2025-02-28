@@ -99,7 +99,7 @@ int main(void) {
     if (itembox_vert_src == NULL)
         return 1;
 
-	RGFW_setGLVersion(RGFW_glCore, 3, 3);
+    RGFW_setGLVersion(RGFW_glCore, 3, 3);
 
 	RGFW_window* window = RGFW_createWindow("mario kart GL", RGFW_RECT(WIDTH, HEIGHT, WIDTH, HEIGHT), RGFW_windowAllowDND | RGFW_windowCenter);
     if (window == NULL) {
@@ -115,6 +115,8 @@ int main(void) {
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
 
     GLuint vertex_vao;
     glGenVertexArrays(1, &vertex_vao);
@@ -125,7 +127,7 @@ int main(void) {
     glBindBuffer(GL_ARRAY_BUFFER, vertex_vbo);
 
     const float size = 0.7;
-    float alpha = 0.6666;
+    float alpha = 0.5;
 
     Vertex vertex_buffer[] = {
         /* top back face */
@@ -148,12 +150,12 @@ int main(void) {
             .color = (Vec4f){0, 0, 1, alpha},
         },
         (Vertex) {
-            .position = (Vec3f){size, 0, -size},
-            .color = (Vec4f){0, 1, 0, alpha},
-        },
-        (Vertex) {
             .position = (Vec3f){-size, 0, -size},
             .color = (Vec4f){1, 1, 0, alpha},
+        },
+        (Vertex) {
+            .position = (Vec3f){size, 0, -size},
+            .color = (Vec4f){0, 1, 0, alpha},
         },
         
         /* top left face */
@@ -168,6 +170,118 @@ int main(void) {
         (Vertex) {
             .position = (Vec3f){-size, 0, size},
             .color = (Vec4f){1, 0, 0, alpha},
+        },
+        
+        /* bottom left face */
+        (Vertex) {
+            .position = (Vec3f){0, -1, 0},
+            .color = (Vec4f){0, 0, 1, alpha},
+        },
+        (Vertex) {
+            .position = (Vec3f){-size, 0, size},
+            .color = (Vec4f){1, 0, 0, alpha},
+        },
+        (Vertex) {
+            .position = (Vec3f){-size, 0, -size},
+            .color = (Vec4f){1, 1, 0, alpha},
+        },
+        
+        /* top right face */
+        (Vertex) {
+            .position = (Vec3f){0, 1, 0},
+            .color = (Vec4f){1, 0.5, 0, alpha},
+        },
+        (Vertex) {
+            .position = (Vec3f){size, 0, size},
+            .color = (Vec4f){0, 1, 1, alpha},
+        },
+        (Vertex) {
+            .position = (Vec3f){size, 0, -size},
+            .color = (Vec4f){0, 1, 0, alpha},
+        },
+        
+        /* bottom right face */
+        (Vertex) {
+            .position = (Vec3f){0, -1, 0},
+            .color = (Vec4f){0, 0, 1, alpha},
+        },
+        (Vertex) {
+            .position = (Vec3f){size, 0, -size},
+            .color = (Vec4f){0, 1, 0, alpha},
+        },
+        (Vertex) {
+            .position = (Vec3f){size, 0, size},
+            .color = (Vec4f){0, 1, 1, alpha},
+        },
+        
+        /* top front face */
+        (Vertex) {
+            .position = (Vec3f){0, 1, 0},
+            .color = (Vec4f){1, 0.5, 0, alpha},
+        },
+        (Vertex) {
+            .position = (Vec3f){-size, 0, size},
+            .color = (Vec4f){1, 0, 0, alpha},
+        },
+        (Vertex) {
+            .position = (Vec3f){size, 0, size},
+            .color = (Vec4f){0, 1, 1, alpha},
+        },
+        
+        /* bottom front face */
+        (Vertex) {
+            .position = (Vec3f){0, -1, 0},
+            .color = (Vec4f){0, 0, 1, alpha},
+        },
+        (Vertex) {
+            .position = (Vec3f){size, 0, size},
+            .color = (Vec4f){0, 1, 1, alpha},
+        },
+        (Vertex) {
+            .position = (Vec3f){-size, 0, size},
+            .color = (Vec4f){1, 0, 0, alpha},
+        },
+        // AAAAAAAAAAAAAAAAAAAAAAAAA
+        /* top back face */
+        (Vertex) {
+            .position = (Vec3f){0, 1, 0},
+            .color = (Vec4f){1, 0.5, 0, alpha},
+        },
+        (Vertex) {
+            .position = (Vec3f){-size, 0, -size},
+            .color = (Vec4f){1, 1, 0, alpha},
+        },
+        (Vertex) {
+            .position = (Vec3f){size, 0, -size},
+            .color = (Vec4f){0, 1, 0, alpha},
+        },
+        
+        /* bottom back face */
+        (Vertex) {
+            .position = (Vec3f){0, -1, 0},
+            .color = (Vec4f){0, 0, 1, alpha},
+        },
+        (Vertex) {
+            .position = (Vec3f){size, 0, -size},
+            .color = (Vec4f){0, 1, 0, alpha},
+        },
+        (Vertex) {
+            .position = (Vec3f){-size, 0, -size},
+            .color = (Vec4f){1, 1, 0, alpha},
+        },
+        
+        /* top left face */
+        (Vertex) {
+            .position = (Vec3f){0, 1, 0},
+            .color = (Vec4f){1, 0.5, 0, alpha},
+        },
+        (Vertex) {
+            .position = (Vec3f){-size, 0, size},
+            .color = (Vec4f){1, 0, 0, alpha},
+        },
+        (Vertex) {
+            .position = (Vec3f){-size, 0, -size},
+            .color = (Vec4f){1, 1, 0, alpha},
         },
         
         /* bottom left face */
@@ -204,12 +318,12 @@ int main(void) {
             .color = (Vec4f){0, 0, 1, alpha},
         },
         (Vertex) {
-            .position = (Vec3f){size, 0, -size},
-            .color = (Vec4f){0, 1, 0, alpha},
-        },
-        (Vertex) {
             .position = (Vec3f){size, 0, size},
             .color = (Vec4f){0, 1, 1, alpha},
+        },
+        (Vertex) {
+            .position = (Vec3f){size, 0, -size},
+            .color = (Vec4f){0, 1, 0, alpha},
         },
         
         /* top front face */
@@ -232,12 +346,12 @@ int main(void) {
             .color = (Vec4f){0, 0, 1, alpha},
         },
         (Vertex) {
-            .position = (Vec3f){size, 0, size},
-            .color = (Vec4f){0, 1, 1, alpha},
-        },
-        (Vertex) {
             .position = (Vec3f){-size, 0, size},
             .color = (Vec4f){1, 0, 0, alpha},
+        },
+        (Vertex) {
+            .position = (Vec3f){size, 0, size},
+            .color = (Vec4f){0, 1, 1, alpha},
         },
     };
 
@@ -252,6 +366,39 @@ int main(void) {
     const float uv_size = 1;
 
     Vertex uv_buffer[] = {
+        /* top face */
+        (Vertex) {
+            .position = (Vec3f){0, 1, 0},
+            .uv = (Vec2f){-uv_size, 0},
+            .color = (Vec4f){1, 0.5, 0, alpha},
+        },
+        (Vertex) {
+            .position = (Vec3f){-size, 0, 0},
+            .uv = (Vec2f){0, -uv_size},
+            .color = (Vec4f){0.75, 0.75, 0, alpha},
+        },
+        (Vertex) {
+            .position = (Vec3f){size, 0, 0},
+            .uv = (Vec2f){0, uv_size},
+            .color = (Vec4f){0, 0.75, 0.75, alpha},
+        },
+
+        /* bottom face */
+        (Vertex) {
+            .position = (Vec3f){0, -1, 0},
+            .uv = (Vec2f){uv_size, 0},
+            .color = (Vec4f){0, 0, 1, alpha},
+        },
+        (Vertex) {
+            .position = (Vec3f){size, 0, 0},
+            .uv = (Vec2f){0, uv_size},
+            .color = (Vec4f){0, 0.75, 0.75, alpha},
+        },
+        (Vertex) {
+            .position = (Vec3f){-size, 0, 0},
+            .uv = (Vec2f){0, -uv_size},
+            .color = (Vec4f){0.75, 0.75, 0, alpha},
+        },
         /* top face */
         (Vertex) {
             .position = (Vec3f){0, 1, 0},
@@ -276,14 +423,14 @@ int main(void) {
             .color = (Vec4f){0, 0, 1, alpha},
         },
         (Vertex) {
-            .position = (Vec3f){size, 0, 0},
-            .uv = (Vec2f){0, uv_size},
-            .color = (Vec4f){0, 0.75, 0.75, alpha},
-        },
-        (Vertex) {
             .position = (Vec3f){-size, 0, 0},
             .uv = (Vec2f){0, -uv_size},
             .color = (Vec4f){0.75, 0.75, 0, alpha},
+        },
+        (Vertex) {
+            .position = (Vec3f){size, 0, 0},
+            .uv = (Vec2f){0, uv_size},
+            .color = (Vec4f){0, 0.75, 0.75, alpha},
         },
     };
 
@@ -384,6 +531,7 @@ int main(void) {
     glUniform2f(resolution_uniform_location, WIDTH, HEIGHT);
     glViewport(0, 0, WIDTH, HEIGHT);
 
+    glClearColor(0, 0, 0, 0);
     while (RGFW_window_shouldClose(window) == 0) {
         while (RGFW_window_checkEvent(window)) {
             switch (window->event.type) {
@@ -401,15 +549,14 @@ int main(void) {
         u64 time = RGFW_getTimeNS() / 1e6;
         glUniform1f(time_uniform_location, time);
         
-        glClearColor(0, 0, 0, 0);
         glClear(GL_COLOR_BUFFER_BIT);
-
-        glBindVertexArray(vertex_vao);
-        glDrawArrays(GL_TRIANGLES, 0, VERTEX_BUFFER_COUNT);
-
+        
         glBindVertexArray(uv_vao);
         glDrawArrays(GL_TRIANGLES, 0, UV_BUFFER_COUNT);
-                        
+        
+        glBindVertexArray(vertex_vao);
+        glDrawArrays(GL_TRIANGLES, 0, VERTEX_BUFFER_COUNT);
+        
         RGFW_window_swapBuffers(window);
         RGFW_window_checkFPS(window, 60);
     }
