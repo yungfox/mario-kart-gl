@@ -88,15 +88,25 @@ error:
 }
 
 int main(void) {
-    const char* itembox_frag_file_path = "../shaders/itembox.frag";
-    const char* itembox_vert_file_path = "../shaders/itembox.vert";
+    const char* triangles_frag_file_path = "../shaders/triangles.frag";
+    const char* triangles_vert_file_path = "../shaders/triangles.vert";
+    const char* texture_frag_file_path = "../shaders/texture.frag";
+    const char* texture_vert_file_path = "../shaders/texture.vert";
 
-    char* itembox_frag_src = read_file_as_string(itembox_frag_file_path);
-    if (itembox_frag_src == NULL)
+    char* triangles_frag_src = read_file_as_string(triangles_frag_file_path);
+    if (triangles_frag_src == NULL)
         return 1;
 
-    char* itembox_vert_src = read_file_as_string(itembox_vert_file_path);
-    if (itembox_vert_src == NULL)
+    char* triangles_vert_src = read_file_as_string(triangles_vert_file_path);
+    if (triangles_vert_src == NULL)
+        return 1;
+
+    char* texture_frag_src = read_file_as_string(texture_frag_file_path);
+    if (texture_frag_src == NULL)
+        return 1;
+
+    char* texture_vert_src = read_file_as_string(texture_vert_file_path);
+    if (texture_vert_src == NULL)
         return 1;
 
     RGFW_setGLVersion(RGFW_glCore, 3, 3);
@@ -363,74 +373,62 @@ int main(void) {
     glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, color));
 
     alpha = 0.0;
-    const float uv_size = 1;
+    const float uv_size = 0.75;
 
     Vertex uv_buffer[] = {
         /* top face */
         (Vertex) {
             .position = (Vec3f){0, 1, 0},
             .uv = (Vec2f){-uv_size, 0},
-            .color = (Vec4f){1, 0.5, 0, alpha},
         },
         (Vertex) {
             .position = (Vec3f){-size, 0, 0},
             .uv = (Vec2f){0, -uv_size},
-            .color = (Vec4f){0.75, 0.75, 0, alpha},
         },
         (Vertex) {
             .position = (Vec3f){size, 0, 0},
             .uv = (Vec2f){0, uv_size},
-            .color = (Vec4f){0, 0.75, 0.75, alpha},
         },
 
         /* bottom face */
         (Vertex) {
             .position = (Vec3f){0, -1, 0},
             .uv = (Vec2f){uv_size, 0},
-            .color = (Vec4f){0, 0, 1, alpha},
         },
         (Vertex) {
             .position = (Vec3f){size, 0, 0},
             .uv = (Vec2f){0, uv_size},
-            .color = (Vec4f){0, 0.75, 0.75, alpha},
         },
         (Vertex) {
             .position = (Vec3f){-size, 0, 0},
             .uv = (Vec2f){0, -uv_size},
-            .color = (Vec4f){0.75, 0.75, 0, alpha},
         },
         /* top face */
         (Vertex) {
             .position = (Vec3f){0, 1, 0},
             .uv = (Vec2f){-uv_size, 0},
-            .color = (Vec4f){1, 0.5, 0, alpha},
         },
         (Vertex) {
             .position = (Vec3f){size, 0, 0},
             .uv = (Vec2f){0, uv_size},
-            .color = (Vec4f){0, 0.75, 0.75, alpha},
         },
         (Vertex) {
             .position = (Vec3f){-size, 0, 0},
             .uv = (Vec2f){0, -uv_size},
-            .color = (Vec4f){0.75, 0.75, 0, alpha},
         },
 
         /* bottom face */
         (Vertex) {
             .position = (Vec3f){0, -1, 0},
             .uv = (Vec2f){uv_size, 0},
-            .color = (Vec4f){0, 0, 1, alpha},
         },
         (Vertex) {
             .position = (Vec3f){-size, 0, 0},
             .uv = (Vec2f){0, -uv_size},
-            .color = (Vec4f){0.75, 0.75, 0, alpha},
         },
         (Vertex) {
             .position = (Vec3f){size, 0, 0},
             .uv = (Vec2f){0, uv_size},
-            .color = (Vec4f){0, 0.75, 0.75, alpha},
         },
     };
 
@@ -447,65 +445,112 @@ int main(void) {
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, position));
     glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, color));
-    glEnableVertexAttribArray(2);
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, uv));
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, uv));
     
     const int VERTEX_BUFFER_COUNT = sizeof(vertex_buffer) / sizeof(vertex_buffer[0]);
     const int UV_BUFFER_COUNT = sizeof(uv_buffer) / sizeof(uv_buffer[0]);
 
-    GLuint frag_shader = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(frag_shader, 1, (const char**)&itembox_frag_src, NULL);
-    glCompileShader(frag_shader);
+    GLuint triangles_frag_shader = glCreateShader(GL_FRAGMENT_SHADER);
+    glShaderSource(triangles_frag_shader, 1, (const char**)&triangles_frag_src, NULL);
+    glCompileShader(triangles_frag_shader);
 
-    GLint frag_shader_compiled = 0;
-    glGetShaderiv(frag_shader, GL_COMPILE_STATUS, &frag_shader_compiled);
+    GLint triangles_frag_shader_compiled = 0;
+    glGetShaderiv(triangles_frag_shader, GL_COMPILE_STATUS, &triangles_frag_shader_compiled);
 
-    if (!frag_shader_compiled) {
+    if (!triangles_frag_shader_compiled) {
         GLchar message[1024];
         GLsizei message_size = 0;
-        glGetShaderInfoLog(frag_shader, sizeof(message), &message_size, message);
+        glGetShaderInfoLog(triangles_frag_shader, sizeof(message), &message_size, message);
         fprintf(stderr, "could not compile fragment shader: %.*s\n", message_size, message);
         return 1;
     }
     
-    GLuint vert_shader = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vert_shader, 1, (const char**)&itembox_vert_src, NULL);
-    glCompileShader(vert_shader);
+    GLuint triangles_vert_shader = glCreateShader(GL_VERTEX_SHADER);
+    glShaderSource(triangles_vert_shader, 1, (const char**)&triangles_vert_src, NULL);
+    glCompileShader(triangles_vert_shader);
 
-    GLint vert_shader_compiled = 0;
-    glGetShaderiv(vert_shader, GL_COMPILE_STATUS, &vert_shader_compiled);
+    GLint triangles_vert_shader_compiled = 0;
+    glGetShaderiv(triangles_vert_shader, GL_COMPILE_STATUS, &triangles_vert_shader_compiled);
 
-    if (!vert_shader_compiled) {
+    if (!triangles_vert_shader_compiled) {
         GLchar message[1024];
         GLsizei message_size = 0;
-        glGetShaderInfoLog(vert_shader, sizeof(message), &message_size, message);
+        glGetShaderInfoLog(triangles_vert_shader, sizeof(message), &message_size, message);
         fprintf(stderr, "could not compile vertex shader: %.*s\n", message_size, message);
         return 1;
     }
 
-    GLuint program = glCreateProgram();
+    GLuint triangles_program = glCreateProgram();
 
-    glAttachShader(program, frag_shader);
-    glAttachShader(program, vert_shader);
-    glLinkProgram(program);
+    glAttachShader(triangles_program, triangles_frag_shader);
+    glAttachShader(triangles_program, triangles_vert_shader);
+    glLinkProgram(triangles_program);
 
     GLint linked = 0;
-    glGetProgramiv(program, GL_LINK_STATUS, &linked);
+    glGetProgramiv(triangles_program, GL_LINK_STATUS, &linked);
     if (!linked) {
         GLchar message[1024];
         GLsizei message_size = 0;
-        glGetProgramInfoLog(program, sizeof(message), &message_size, message);
-        fprintf(stderr, "could not link program: %.*s\n", message_size, message);
+        glGetProgramInfoLog(triangles_program, sizeof(message), &message_size, message);
+        fprintf(stderr, "could not link triangles_program: %.*s\n", message_size, message);
         return 1;
     }
 
-    glDeleteShader(frag_shader);
-    glDeleteShader(vert_shader);
-    free(itembox_frag_src);
-    free(itembox_vert_src);
+    glDeleteShader(triangles_frag_shader);
+    glDeleteShader(triangles_vert_shader);
+    free(triangles_frag_src);
+    free(triangles_vert_src);
 
-    glUseProgram(program);
+    GLuint texture_frag_shader = glCreateShader(GL_FRAGMENT_SHADER);
+    glShaderSource(texture_frag_shader, 1, (const char**)&texture_frag_src, NULL);
+    glCompileShader(texture_frag_shader);
+
+    GLint texture_frag_shader_compiled = 0;
+    glGetShaderiv(texture_frag_shader, GL_COMPILE_STATUS, &texture_frag_shader_compiled);
+
+    if (!texture_frag_shader_compiled) {
+        GLchar message[1024];
+        GLsizei message_size = 0;
+        glGetShaderInfoLog(texture_frag_shader, sizeof(message), &message_size, message);
+        fprintf(stderr, "could not compile fragment shader: %.*s\n", message_size, message);
+        return 1;
+    }
+    
+    GLuint texture_vert_shader = glCreateShader(GL_VERTEX_SHADER);
+    glShaderSource(texture_vert_shader, 1, (const char**)&texture_vert_src, NULL);
+    glCompileShader(texture_vert_shader);
+
+    GLint texture_vert_shader_compiled = 0;
+    glGetShaderiv(texture_vert_shader, GL_COMPILE_STATUS, &texture_vert_shader_compiled);
+
+    if (!texture_vert_shader_compiled) {
+        GLchar message[1024];
+        GLsizei message_size = 0;
+        glGetShaderInfoLog(texture_vert_shader, sizeof(message), &message_size, message);
+        fprintf(stderr, "could not compile vertex shader: %.*s\n", message_size, message);
+        return 1;
+    }
+
+    GLuint texture_program = glCreateProgram();
+
+    glAttachShader(texture_program, texture_frag_shader);
+    glAttachShader(texture_program, texture_vert_shader);
+    glLinkProgram(texture_program);
+
+    linked = 0;
+    glGetProgramiv(texture_program, GL_LINK_STATUS, &linked);
+    if (!linked) {
+        GLchar message[1024];
+        GLsizei message_size = 0;
+        glGetProgramInfoLog(texture_program, sizeof(message), &message_size, message);
+        fprintf(stderr, "could not link texture_program: %.*s\n", message_size, message);
+        return 1;
+    }
+
+    glDeleteShader(texture_frag_shader);
+    glDeleteShader(texture_vert_shader);
+    free(texture_frag_src);
+    free(texture_vert_src);
 
     const char* texture_file_name = "../images/questionmark.png";
     int texture_width, texture_height, n;
@@ -524,36 +569,52 @@ int main(void) {
 
     stbi_image_free(texture_data);
 
-    GLint image_uniform_location = glGetUniformLocation(program, "image");
-    GLint time_uniform_location = glGetUniformLocation(program, "time");
-    GLint resolution_uniform_location = glGetUniformLocation(program, "resolution");
-    glUniform1i(image_uniform_location, 0);
-    glUniform2f(resolution_uniform_location, WIDTH, HEIGHT);
-    glViewport(0, 0, WIDTH, HEIGHT);
+    GLint triangles_time_uniform_location = glGetUniformLocation(triangles_program, "time");
+    GLint triangles_resolution_uniform_location = glGetUniformLocation(triangles_program, "resolution");
+    
+    GLint texture_image_uniform_location = glGetUniformLocation(texture_program, "image");
+    GLint texture_time_uniform_location = glGetUniformLocation(texture_program, "time");
+    GLint texture_resolution_uniform_location = glGetUniformLocation(texture_program, "resolution");
 
     glClearColor(0, 0, 0, 0);
+    
+    glUniform2f(triangles_resolution_uniform_location, WIDTH, HEIGHT);
+    glUniform2f(texture_resolution_uniform_location, WIDTH, HEIGHT);
+    glUniform1i(texture_image_uniform_location, 0);
+    glViewport(0, 0, WIDTH, HEIGHT);
+
+    int width = WIDTH;
+    int height = HEIGHT;
+
     while (RGFW_window_shouldClose(window) == 0) {
         while (RGFW_window_checkEvent(window)) {
             switch (window->event.type) {
                 case RGFW_windowResized: {
-                    int width = window->r.w;
-                    int height = window->r.h;
-                    glUniform2f(resolution_uniform_location, width, height);
+                    width = window->r.w;
+                    height = window->r.h;
+                    glUniform2f(triangles_resolution_uniform_location, width, height);
+                    glUniform2f(texture_resolution_uniform_location, width, height);
                     glViewport(0, 0, width, height);
                 } break;
                 default:
-                    break;
+                break;
             }
         }
 
         u64 time = RGFW_getTimeNS() / 1e6;
-        glUniform1f(time_uniform_location, time);
         
         glClear(GL_COLOR_BUFFER_BIT);
         
+        glUseProgram(texture_program);
+        glUniform1i(texture_image_uniform_location, 0);
+        glUniform2f(texture_resolution_uniform_location, width, height);
+        glUniform1f(texture_time_uniform_location, time);
         glBindVertexArray(uv_vao);
         glDrawArrays(GL_TRIANGLES, 0, UV_BUFFER_COUNT);
         
+        glUseProgram(triangles_program);
+        glUniform2f(triangles_resolution_uniform_location, width, height);
+        glUniform1f(triangles_time_uniform_location, time);
         glBindVertexArray(vertex_vao);
         glDrawArrays(GL_TRIANGLES, 0, VERTEX_BUFFER_COUNT);
         

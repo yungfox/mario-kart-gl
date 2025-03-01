@@ -4,10 +4,8 @@ uniform float time;
 uniform vec2 resolution;
 
 layout(location = 0) in vec3 position;
-layout(location = 1) in vec4 color;
-layout(location = 2) in vec2 uv;
+layout(location = 1) in vec2 uv;
 
-out vec4 out_color;
 out vec2 out_uv;
 
 mat4 mat4_translate(vec3 dir) {
@@ -56,8 +54,8 @@ mat4 mat4_perspective(float fovy, float aspect, float near, float far) {
 
 void main(void) {
     float aspect = resolution.x / resolution.y;
-    float t = time * 0.001953125; // 1/512
-    float u = t * 0.25;
+    float t = time * 0.00390625; // 1/512
+    float u = 1.5;
 
     mat4 camera = (
         mat4_translate(vec3(0.0, 0.0, -500.0)) *
@@ -74,6 +72,7 @@ void main(void) {
         camera_pos
     );
 
+    // float a = 1.5;
+    // mat2 mat = mat2(cos(a), -sin(a), sin(a), cos(a));
     out_uv = uv;
-    out_color = color;
 }
