@@ -140,7 +140,6 @@ int main(void) {
     float alpha = 0.5;
 
     Vertex vertex_buffer[] = {
-        /* top back face */
         (Vertex) {
             .position = (Vec3f){0, 1, 0},
             .color = (Vec4f){1, 0.5, 0, alpha},
@@ -153,204 +152,6 @@ int main(void) {
             .position = (Vec3f){-size, 0, -size},
             .color = (Vec4f){1, 1, 0, alpha},
         },
-        
-        /* bottom back face */
-        (Vertex) {
-            .position = (Vec3f){0, -1, 0},
-            .color = (Vec4f){0, 0, 1, alpha},
-        },
-        (Vertex) {
-            .position = (Vec3f){-size, 0, -size},
-            .color = (Vec4f){1, 1, 0, alpha},
-        },
-        (Vertex) {
-            .position = (Vec3f){size, 0, -size},
-            .color = (Vec4f){0, 1, 0, alpha},
-        },
-        
-        /* top left face */
-        (Vertex) {
-            .position = (Vec3f){0, 1, 0},
-            .color = (Vec4f){1, 0.5, 0, alpha},
-        },
-        (Vertex) {
-            .position = (Vec3f){-size, 0, -size},
-            .color = (Vec4f){1, 1, 0, alpha},
-        },
-        (Vertex) {
-            .position = (Vec3f){-size, 0, size},
-            .color = (Vec4f){1, 0, 0, alpha},
-        },
-        
-        /* bottom left face */
-        (Vertex) {
-            .position = (Vec3f){0, -1, 0},
-            .color = (Vec4f){0, 0, 1, alpha},
-        },
-        (Vertex) {
-            .position = (Vec3f){-size, 0, size},
-            .color = (Vec4f){1, 0, 0, alpha},
-        },
-        (Vertex) {
-            .position = (Vec3f){-size, 0, -size},
-            .color = (Vec4f){1, 1, 0, alpha},
-        },
-        
-        /* top right face */
-        (Vertex) {
-            .position = (Vec3f){0, 1, 0},
-            .color = (Vec4f){1, 0.5, 0, alpha},
-        },
-        (Vertex) {
-            .position = (Vec3f){size, 0, size},
-            .color = (Vec4f){0, 1, 1, alpha},
-        },
-        (Vertex) {
-            .position = (Vec3f){size, 0, -size},
-            .color = (Vec4f){0, 1, 0, alpha},
-        },
-        
-        /* bottom right face */
-        (Vertex) {
-            .position = (Vec3f){0, -1, 0},
-            .color = (Vec4f){0, 0, 1, alpha},
-        },
-        (Vertex) {
-            .position = (Vec3f){size, 0, -size},
-            .color = (Vec4f){0, 1, 0, alpha},
-        },
-        (Vertex) {
-            .position = (Vec3f){size, 0, size},
-            .color = (Vec4f){0, 1, 1, alpha},
-        },
-        
-        /* top front face */
-        (Vertex) {
-            .position = (Vec3f){0, 1, 0},
-            .color = (Vec4f){1, 0.5, 0, alpha},
-        },
-        (Vertex) {
-            .position = (Vec3f){-size, 0, size},
-            .color = (Vec4f){1, 0, 0, alpha},
-        },
-        (Vertex) {
-            .position = (Vec3f){size, 0, size},
-            .color = (Vec4f){0, 1, 1, alpha},
-        },
-        
-        /* bottom front face */
-        (Vertex) {
-            .position = (Vec3f){0, -1, 0},
-            .color = (Vec4f){0, 0, 1, alpha},
-        },
-        (Vertex) {
-            .position = (Vec3f){size, 0, size},
-            .color = (Vec4f){0, 1, 1, alpha},
-        },
-        (Vertex) {
-            .position = (Vec3f){-size, 0, size},
-            .color = (Vec4f){1, 0, 0, alpha},
-        },
-        // AAAAAAAAAAAAAAAAAAAAAAAAA
-        /* top back face */
-        (Vertex) {
-            .position = (Vec3f){0, 1, 0},
-            .color = (Vec4f){1, 0.5, 0, alpha},
-        },
-        (Vertex) {
-            .position = (Vec3f){-size, 0, -size},
-            .color = (Vec4f){1, 1, 0, alpha},
-        },
-        (Vertex) {
-            .position = (Vec3f){size, 0, -size},
-            .color = (Vec4f){0, 1, 0, alpha},
-        },
-        
-        /* bottom back face */
-        (Vertex) {
-            .position = (Vec3f){0, -1, 0},
-            .color = (Vec4f){0, 0, 1, alpha},
-        },
-        (Vertex) {
-            .position = (Vec3f){size, 0, -size},
-            .color = (Vec4f){0, 1, 0, alpha},
-        },
-        (Vertex) {
-            .position = (Vec3f){-size, 0, -size},
-            .color = (Vec4f){1, 1, 0, alpha},
-        },
-        
-        /* top left face */
-        (Vertex) {
-            .position = (Vec3f){0, 1, 0},
-            .color = (Vec4f){1, 0.5, 0, alpha},
-        },
-        (Vertex) {
-            .position = (Vec3f){-size, 0, size},
-            .color = (Vec4f){1, 0, 0, alpha},
-        },
-        (Vertex) {
-            .position = (Vec3f){-size, 0, -size},
-            .color = (Vec4f){1, 1, 0, alpha},
-        },
-        
-        /* bottom left face */
-        (Vertex) {
-            .position = (Vec3f){0, -1, 0},
-            .color = (Vec4f){0, 0, 1, alpha},
-        },
-        (Vertex) {
-            .position = (Vec3f){-size, 0, -size},
-            .color = (Vec4f){1, 1, 0, alpha},
-        },
-        (Vertex) {
-            .position = (Vec3f){-size, 0, size},
-            .color = (Vec4f){1, 0, 0, alpha},
-        },
-        
-        /* top right face */
-        (Vertex) {
-            .position = (Vec3f){0, 1, 0},
-            .color = (Vec4f){1, 0.5, 0, alpha},
-        },
-        (Vertex) {
-            .position = (Vec3f){size, 0, -size},
-            .color = (Vec4f){0, 1, 0, alpha},
-        },
-        (Vertex) {
-            .position = (Vec3f){size, 0, size},
-            .color = (Vec4f){0, 1, 1, alpha},
-        },
-        
-        /* bottom right face */
-        (Vertex) {
-            .position = (Vec3f){0, -1, 0},
-            .color = (Vec4f){0, 0, 1, alpha},
-        },
-        (Vertex) {
-            .position = (Vec3f){size, 0, size},
-            .color = (Vec4f){0, 1, 1, alpha},
-        },
-        (Vertex) {
-            .position = (Vec3f){size, 0, -size},
-            .color = (Vec4f){0, 1, 0, alpha},
-        },
-        
-        /* top front face */
-        (Vertex) {
-            .position = (Vec3f){0, 1, 0},
-            .color = (Vec4f){1, 0.5, 0, alpha},
-        },
-        (Vertex) {
-            .position = (Vec3f){size, 0, size},
-            .color = (Vec4f){0, 1, 1, alpha},
-        },
-        (Vertex) {
-            .position = (Vec3f){-size, 0, size},
-            .color = (Vec4f){1, 0, 0, alpha},
-        },
-        
-        /* bottom front face */
         (Vertex) {
             .position = (Vec3f){0, -1, 0},
             .color = (Vec4f){0, 0, 1, alpha},
@@ -365,7 +166,47 @@ int main(void) {
         },
     };
 
+    GLuint vertex_indices[] = {
+        /* top back triangle */
+        0, 1, 2,
+        /* bottom back triangle */
+        3, 2, 1,
+        /* top left triangle */
+        0, 2, 4,
+        /* bottom left triangle */
+        3, 4, 2,
+        /* top right triangle */
+        0, 5, 1,
+        /* bottom right triangle */
+        3, 1, 5,
+        /* top front triangle */
+        0, 4, 5,
+        /* bottom front triangle */
+        3, 5, 4,
+        /* top back triangle */
+        0, 2, 1,
+        /* bottom back triangle */
+        3, 1, 2,
+        /* top left triangle */
+        0, 4, 2,
+        /* bottom left triangle */
+        3, 2, 4,
+        /* top right triangle */
+        0, 1, 5,
+        /* bottom right triangle */
+        3, 5, 1,
+        /* top front triangle */
+        0, 5, 4,
+        /* bottom front triangle */
+        3, 4, 5,
+    };
+
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertex_buffer), &vertex_buffer, GL_DYNAMIC_DRAW);
+
+    GLuint vertex_ibo;
+    glGenBuffers(1, &vertex_ibo);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vertex_ibo);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(vertex_indices), &vertex_indices, GL_STATIC_DRAW);
 
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, position));
@@ -376,7 +217,6 @@ int main(void) {
     const float uv_size = 0.75;
 
     Vertex uv_buffer[] = {
-        /* top face */
         (Vertex) {
             .position = (Vec3f){0, 1, 0},
             .uv = (Vec2f){-uv_size, 0},
@@ -389,47 +229,21 @@ int main(void) {
             .position = (Vec3f){size, 0, 0},
             .uv = (Vec2f){0, uv_size},
         },
-
-        /* bottom face */
         (Vertex) {
             .position = (Vec3f){0, -1, 0},
             .uv = (Vec2f){uv_size, 0},
         },
-        (Vertex) {
-            .position = (Vec3f){size, 0, 0},
-            .uv = (Vec2f){0, uv_size},
-        },
-        (Vertex) {
-            .position = (Vec3f){-size, 0, 0},
-            .uv = (Vec2f){0, -uv_size},
-        },
-        /* top face */
-        (Vertex) {
-            .position = (Vec3f){0, 1, 0},
-            .uv = (Vec2f){-uv_size, 0},
-        },
-        (Vertex) {
-            .position = (Vec3f){size, 0, 0},
-            .uv = (Vec2f){0, uv_size},
-        },
-        (Vertex) {
-            .position = (Vec3f){-size, 0, 0},
-            .uv = (Vec2f){0, -uv_size},
-        },
+    };
 
-        /* bottom face */
-        (Vertex) {
-            .position = (Vec3f){0, -1, 0},
-            .uv = (Vec2f){uv_size, 0},
-        },
-        (Vertex) {
-            .position = (Vec3f){-size, 0, 0},
-            .uv = (Vec2f){0, -uv_size},
-        },
-        (Vertex) {
-            .position = (Vec3f){size, 0, 0},
-            .uv = (Vec2f){0, uv_size},
-        },
+    GLuint uv_indices[] = {
+        /* top triangle */
+        0, 1, 2,
+        /* bottom triangle */
+        3, 2, 1,
+        /* top triangle */
+        0, 2, 1,
+        /* bottom triangle */
+        3, 1, 2,
     };
 
     GLuint uv_vao;
@@ -442,13 +256,18 @@ int main(void) {
 
     glBufferData(GL_ARRAY_BUFFER, sizeof(uv_buffer), &uv_buffer, GL_DYNAMIC_DRAW);
 
+    GLuint uv_ibo;
+    glGenBuffers(1, &uv_ibo);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, uv_ibo);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uv_indices), &uv_indices, GL_STATIC_DRAW);
+
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, position));
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, uv));
     
-    const int VERTEX_BUFFER_COUNT = sizeof(vertex_buffer) / sizeof(vertex_buffer[0]);
-    const int UV_BUFFER_COUNT = sizeof(uv_buffer) / sizeof(uv_buffer[0]);
+    const int VERTEX_INDICES_COUNT = sizeof(vertex_indices) / sizeof(vertex_indices[0]);
+    const int UV_INDICES_COUNT = sizeof(uv_indices) / sizeof(uv_indices[0]);
 
     GLuint triangles_frag_shader = glCreateShader(GL_FRAGMENT_SHADER);
     glShaderSource(triangles_frag_shader, 1, (const char**)&triangles_frag_src, NULL);
@@ -610,13 +429,13 @@ int main(void) {
         glUniform2f(texture_resolution_uniform_location, width, height);
         glUniform1f(texture_time_uniform_location, time);
         glBindVertexArray(uv_vao);
-        glDrawArrays(GL_TRIANGLES, 0, UV_BUFFER_COUNT);
+        glDrawElements(GL_TRIANGLES, UV_INDICES_COUNT, GL_UNSIGNED_INT, 0);
         
         glUseProgram(triangles_program);
         glUniform2f(triangles_resolution_uniform_location, width, height);
         glUniform1f(triangles_time_uniform_location, time);
         glBindVertexArray(vertex_vao);
-        glDrawArrays(GL_TRIANGLES, 0, VERTEX_BUFFER_COUNT);
+        glDrawElements(GL_TRIANGLES, VERTEX_INDICES_COUNT, GL_UNSIGNED_INT, 0);
         
         RGFW_window_swapBuffers(window);
         RGFW_window_checkFPS(window, 60);
