@@ -14,6 +14,8 @@ set(SOURCES
 
 if(WIN32)
     set(LIBS opengl32 gdi32)
+    add_compile_options(/W3)
+    add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 elseif(APPLE)
     set(LIBS "-framework OpenGL -framework Cocoa")
 else()

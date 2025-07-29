@@ -136,8 +136,8 @@ int main(void) {
     glGenBuffers(1, &vertex_vbo);
     glBindBuffer(GL_ARRAY_BUFFER, vertex_vbo);
 
-    const float size = 0.7;
-    float alpha = 0.5;
+    const float size = 0.7f;
+    float alpha = 0.5f;
 
     Vertex vertex_buffer[] = {
         (Vertex) {
@@ -213,8 +213,8 @@ int main(void) {
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, color));
 
-    alpha = 0.0;
-    const float uv_size = 0.75;
+    alpha = 0.0f;
+    const float uv_size = 0.75f;
 
     Vertex uv_buffer[] = {
         (Vertex) {
@@ -411,8 +411,8 @@ int main(void) {
                 case RGFW_windowResized: {
                     width = window->r.w;
                     height = window->r.h;
-                    glUniform2f(triangles_resolution_uniform_location, width, height);
-                    glUniform2f(texture_resolution_uniform_location, width, height);
+                    glUniform2f(triangles_resolution_uniform_location, (float)width, (float)height);
+                    glUniform2f(texture_resolution_uniform_location, (float)width, (float)height);
                     glViewport(0, 0, width, height);
                 } break;
                 default:
@@ -420,20 +420,20 @@ int main(void) {
             }
         }
 
-        u64 time = RGFW_getTimeNS() / 1e6;
+        u64 time = RGFW_getTimeNS() / (u64)1e6;
         
         glClear(GL_COLOR_BUFFER_BIT);
         
         glUseProgram(texture_program);
         glUniform1i(texture_image_uniform_location, 0);
-        glUniform2f(texture_resolution_uniform_location, width, height);
-        glUniform1f(texture_time_uniform_location, time);
+        glUniform2f(texture_resolution_uniform_location, (float)width, (float)height);
+        glUniform1f(texture_time_uniform_location, (float)time);
         glBindVertexArray(uv_vao);
         glDrawElements(GL_TRIANGLES, UV_INDICES_COUNT, GL_UNSIGNED_INT, 0);
         
         glUseProgram(triangles_program);
-        glUniform2f(triangles_resolution_uniform_location, width, height);
-        glUniform1f(triangles_time_uniform_location, time);
+        glUniform2f(triangles_resolution_uniform_location, (float)width, (float)height);
+        glUniform1f(triangles_time_uniform_location, (float)time);
         glBindVertexArray(vertex_vao);
         glDrawElements(GL_TRIANGLES, VERTEX_INDICES_COUNT, GL_UNSIGNED_INT, 0);
         
