@@ -11,9 +11,14 @@ Runs on macOS, Linux and Windows thanks to [RGFW](https://github.com/ColleagueRi
 ## Quick start
 
 ```console
-$ mkdir build
+$ cmake -B build
 $ cd build
-$ cmake ..
+
+# posix
 $ make
 $ ./mario-kart-gl
+
+# windows
+$ cmake --build .
+$ .\Debug\mario-kart-gl.exe
 ```
